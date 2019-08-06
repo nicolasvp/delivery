@@ -1,0 +1,7 @@
+spring:  
+  application:
+    name: delivery-service # Este mismo nombre debe tener el yml que está en git
+  cloud:
+    config:
+      failFast: false
+      uri: http://localhost:1111
