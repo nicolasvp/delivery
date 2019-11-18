@@ -9,6 +9,10 @@ public interface IHistoryService {
 	
 	public History findById(Long id);
 	
+	public List<History> findHistoriesByUserId(Long id);
+	
+	public History findLastUserHistory(Long id);
+	
 	public History save(History history);
 	
 	public void delete(Long id);

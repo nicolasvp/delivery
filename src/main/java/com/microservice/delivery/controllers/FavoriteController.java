@@ -29,7 +29,6 @@ import com.microservices.commons.models.entity.delivery.Favorite;
 import com.microservice.delivery.models.services.IFavoriteService;
 
 @RestController
-@RequestMapping("/api")
 public class FavoriteController {
 	
 	protected Logger LOGGER = LoggerFactory.getLogger(FavoriteController.class);

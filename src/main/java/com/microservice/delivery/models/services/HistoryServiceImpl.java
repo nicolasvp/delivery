@@ -37,4 +37,14 @@ public class HistoryServiceImpl implements IHistoryService {
 		historyDao.deleteById(id);
 	}
 
+	@Override
+	public List<History> findHistoriesByUserId(Long id) {
+		return historyDao.findHistoriesByUserId(id);
+	}
+
+	@Override
+	public History findLastUserHistory(Long id) {
+		return historyDao.findTopByUserIdOrderByIdDesc(id);
+	}
+
 }

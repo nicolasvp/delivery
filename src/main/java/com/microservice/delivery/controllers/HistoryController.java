@@ -29,7 +29,6 @@ import com.microservices.commons.models.entity.delivery.History;
 import com.microservice.delivery.models.services.IHistoryService;
 
 @RestController
-@RequestMapping("/api")
 public class HistoryController {
 
 	protected Logger LOGGER = LoggerFactory.getLogger(HistoryController.class);
@@ -107,7 +106,7 @@ public class HistoryController {
 		}
 
 		try {
-			historyFromDB.setUser(history.getUser());
+			historyFromDB.setUserId(history.getUserId());
 			historyFromDB.setPhraseId(history.getPhraseId());
 			historyUpdated = historyService.save(historyFromDB);
 		} catch (DataAccessException e) {

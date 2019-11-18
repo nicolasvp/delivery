@@ -29,7 +29,6 @@ import com.microservices.commons.models.entity.delivery.Like;
 import com.microservice.delivery.models.services.ILikesService;
 
 @RestController
-@RequestMapping("/api")
 public class LikesController {
 	
 	protected Logger LOGGER = LoggerFactory.getLogger(LikesController.class);
