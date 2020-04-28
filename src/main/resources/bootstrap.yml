@@ -3,5 +3,5 @@ spring:
     name: delivery-service # Este mismo nombre debe tener el yml que está en git
   cloud:
     config:
-      failFast: false
-      uri: http://localhost:1111
+      failFast: true # Para que se reinicie rapidamente cada vez que no responda el config server, al levantar con docker
+      uri: http://config-server:1111
