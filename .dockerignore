@@ -1,0 +1,8 @@
+.mvn
+.settings
+bin/*
+logs/*
+target/*
+.classpath
+.project
+HELP.md
