@@ -1,0 +1,14 @@
+.mvn
+.settings
+bin/*
+logs/*
+target/*
+.classpath
+.project
+HELP.md
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

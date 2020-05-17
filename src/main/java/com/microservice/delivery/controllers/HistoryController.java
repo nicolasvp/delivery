@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import com.microservices.commons.models.services.IUtilService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.microservices.commons.utils.Messages;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.microservices.commons.enums.CrudMessagesEnum;
 import com.microservices.commons.enums.DatabaseMessagesEnum;
@@ -28,10 +27,9 @@ import com.microservices.commons.exceptions.NullRecordException;
 import com.microservices.commons.models.entity.delivery.History;
 import com.microservice.delivery.models.services.IHistoryService;
 
+@Slf4j
 @RestController
 public class HistoryController {
-
-	protected Logger LOGGER = LoggerFactory.getLogger(HistoryController.class);
 	
 	@Autowired
 	private IHistoryService historyService;
@@ -50,13 +48,16 @@ public class HistoryController {
 		History history = null;
 
 		try {
+			log.info(Messages.findObjectMessage("History", id.toString()));
 			history = historyService.findById(id);
 		} catch (DataAccessException e) {
+			log.error(Messages.errorDatabaseAccessMessage(e.getMessage()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.ACCESS_DATABASE.getMessage(), e);
 		}
 
 		// return error if the record non exist
 		if (history == null) {
+			log.error(Messages.nullObjectMessage("History", id.toString()));
 			throw new NullRecordException();
 		}
 
@@ -71,13 +72,16 @@ public class HistoryController {
 
 		// if validation fails, list all errors and return them
 		if(result.hasErrors()) {
+			log.error(Messages.errorsCreatingObjectMessage("History"));
 			response.put("errors", utilService.listErrors(result));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
 		try {
+			log.info(Messages.creatingObjectMessage("History"));
 			newHistory = historyService.save(history);
 		} catch (DataAccessException e) {
+			log.error(Messages.errorDatabaseCreateMessage("History", e.toString()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.STORE_RECORD.getMessage(), e);
 		}
 
@@ -96,20 +100,24 @@ public class HistoryController {
 
 		// if validation fails, list all errors and return them
 		if(result.hasErrors()) {
+			log.error(Messages.errorsUpdatingObjectMessage("History", id.toString()));
 			response.put("errors", utilService.listErrors(result));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
 		// return error if the record non exist
 		if (historyFromDB == null) {
+			log.error(Messages.nullObjectMessage("History", id.toString()));
 			throw new NullRecordException();
 		}
 
 		try {
+			log.info(Messages.updatingObjectMessage("History", id.toString()));
 			historyFromDB.setUserId(history.getUserId());
 			historyFromDB.setPhraseId(history.getPhraseId());
 			historyUpdated = historyService.save(historyFromDB);
 		} catch (DataAccessException e) {
+			log.error(Messages.errorDatabaseUpdateMessage("History", id.toString(), e.getMessage()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.UPDATE_RECORD.getMessage(), e);
 		}
 
@@ -125,8 +133,10 @@ public class HistoryController {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
+			log.info(Messages.deletingObjectMessage("History", id.toString()));
 			historyService.delete(id);
 		} catch (DataAccessException e) {
+			log.error(Messages.errorDatabaseDeleteMessage("History", id.toString(), e.getMessage()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.DELETE_RECORD.getMessage(), e);
 		}
 
