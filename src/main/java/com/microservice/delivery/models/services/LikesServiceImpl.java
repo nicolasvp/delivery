@@ -23,7 +23,7 @@ public class LikesServiceImpl implements ILikesService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public Like findById(Long id) {
+	public Like findById(String id) {
 		return likeDao.findById(id).orElse(null);
 	}
 
@@ -33,7 +33,7 @@ public class LikesServiceImpl implements ILikesService{
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		likeDao.deleteById(id);
 	}
 

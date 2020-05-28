@@ -23,7 +23,7 @@ public class FavoriteServiceImpl implements IFavoriteService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Favorite findById(Long id) {
+	public Favorite findById(String id) {
 		return favoriteDao.findById(id).orElse(null);
 	}
 
@@ -33,7 +33,7 @@ public class FavoriteServiceImpl implements IFavoriteService {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		favoriteDao.deleteById(id);
 	}
 

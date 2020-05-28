@@ -7,9 +7,9 @@ public interface ILikesService {
 	
 	public List<Like> findAll();
 	
-	public Like findById(Long id);
+	public Like findById(String id);
 	
 	public Like save(Like likes);
 	
-	public void delete(Long id);
+	public void delete(String id);
 }

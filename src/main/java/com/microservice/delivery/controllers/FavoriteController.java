@@ -43,7 +43,7 @@ public class FavoriteController {
 	}
 	
 	@GetMapping(path="/favorities/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> show(@PathVariable Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> show(@PathVariable String id) throws NullRecordException, DatabaseAccessException {
 		
 		Favorite favorite = null;
 
@@ -92,7 +92,7 @@ public class FavoriteController {
 	}
 	
 	@PutMapping(path="/favorities/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@Valid @RequestBody Favorite favorite, BindingResult result, @PathVariable("id") Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> update(@Valid @RequestBody Favorite favorite, BindingResult result, @PathVariable("id") String id) throws NullRecordException, DatabaseAccessException {
 		
 		Favorite favoriteFromDB = favoriteService.findById(id);
 		Favorite favoriteUpdated = null;
@@ -113,7 +113,7 @@ public class FavoriteController {
 
 		try {
 			log.info(Messages.updatingObjectMessage("Favorite", id.toString()));
-			favoriteFromDB.setUser(favorite.getUser());
+			favoriteFromDB.setUserId(favorite.getUserId());
 			favoriteFromDB.setPhraseId(favorite.getPhraseId());
 			favoriteUpdated = favoriteService.save(favoriteFromDB);
 		} catch (DataAccessException e) {
@@ -128,7 +128,7 @@ public class FavoriteController {
 	}
 	
 	@DeleteMapping(path="/favorities/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws DatabaseAccessException {
+	public ResponseEntity<?> delete(@PathVariable("id") String id) throws DatabaseAccessException {
 		
 		Map<String, Object> response = new HashMap<>();
 

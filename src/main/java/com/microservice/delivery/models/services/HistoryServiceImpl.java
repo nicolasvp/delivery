@@ -23,7 +23,7 @@ public class HistoryServiceImpl implements IHistoryService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public History findById(Long id) {
+	public History findById(String id) {
 		return historyDao.findById(id).orElse(null);
 	}
 
@@ -33,7 +33,7 @@ public class HistoryServiceImpl implements IHistoryService {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		historyDao.deleteById(id);
 	}
 

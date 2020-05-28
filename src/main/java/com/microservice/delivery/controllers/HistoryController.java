@@ -43,12 +43,12 @@ public class HistoryController {
 	}
 	
 	@GetMapping(path="/histories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> show(@PathVariable Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> show(@PathVariable String id) throws NullRecordException, DatabaseAccessException {
 		
 		History history = null;
 
 		try {
-			log.info(Messages.findObjectMessage("History", id.toString()));
+			log.info(Messages.findObjectMessage("History", id));
 			history = historyService.findById(id);
 		} catch (DataAccessException e) {
 			log.error(Messages.errorDatabaseAccessMessage(e.getMessage()));
@@ -57,7 +57,7 @@ public class HistoryController {
 
 		// return error if the record non exist
 		if (history == null) {
-			log.error(Messages.nullObjectMessage("History", id.toString()));
+			log.error(Messages.nullObjectMessage("History", id));
 			throw new NullRecordException();
 		}
 
@@ -92,7 +92,7 @@ public class HistoryController {
 	}
 	
 	@PutMapping(path="/histories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@Valid @RequestBody History history, BindingResult result, @PathVariable("id") Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> update(@Valid @RequestBody History history, BindingResult result, @PathVariable("id") String id) throws NullRecordException, DatabaseAccessException {
 		
 		History historyFromDB = historyService.findById(id);
 		History historyUpdated = null;
@@ -100,24 +100,24 @@ public class HistoryController {
 
 		// if validation fails, list all errors and return them
 		if(result.hasErrors()) {
-			log.error(Messages.errorsUpdatingObjectMessage("History", id.toString()));
+			log.error(Messages.errorsUpdatingObjectMessage("History", id));
 			response.put("errors", utilService.listErrors(result));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
 		// return error if the record non exist
 		if (historyFromDB == null) {
-			log.error(Messages.nullObjectMessage("History", id.toString()));
+			log.error(Messages.nullObjectMessage("History", id));
 			throw new NullRecordException();
 		}
 
 		try {
-			log.info(Messages.updatingObjectMessage("History", id.toString()));
+			log.info(Messages.updatingObjectMessage("History", id));
 			historyFromDB.setUserId(history.getUserId());
 			historyFromDB.setPhraseId(history.getPhraseId());
 			historyUpdated = historyService.save(historyFromDB);
 		} catch (DataAccessException e) {
-			log.error(Messages.errorDatabaseUpdateMessage("History", id.toString(), e.getMessage()));
+			log.error(Messages.errorDatabaseUpdateMessage("History", id, e.getMessage()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.UPDATE_RECORD.getMessage(), e);
 		}
 
@@ -128,15 +128,15 @@ public class HistoryController {
 	}
 	
 	@DeleteMapping(path="/histories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws DatabaseAccessException {
+	public ResponseEntity<?> delete(@PathVariable("id") String id) throws DatabaseAccessException {
 		
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			log.info(Messages.deletingObjectMessage("History", id.toString()));
+			log.info(Messages.deletingObjectMessage("History", id));
 			historyService.delete(id);
 		} catch (DataAccessException e) {
-			log.error(Messages.errorDatabaseDeleteMessage("History", id.toString(), e.getMessage()));
+			log.error(Messages.errorDatabaseDeleteMessage("History", id, e.getMessage()));
 			throw new DatabaseAccessException(DatabaseMessagesEnum.DELETE_RECORD.getMessage(), e);
 		}
 

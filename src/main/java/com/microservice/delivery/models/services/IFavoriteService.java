@@ -7,9 +7,9 @@ public interface IFavoriteService {
 
 	public List<Favorite> findAll();
 	
-	public Favorite findById(Long id);
+	public Favorite findById(String id);
 	
 	public Favorite save(Favorite favorite);
 	
-	public void delete(Long id);
+	public void delete(String id);
 }

@@ -1,6 +1,7 @@
-package com.microservice.delivery.controllers;
+package com.microservice.delivery.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservice.delivery.controllers.FavoriteController;
 import com.microservices.commons.enums.CrudMessagesEnum;
 import com.microservices.commons.models.entity.delivery.Favorite;
 import com.microservice.delivery.models.services.IFavoriteService;
@@ -104,14 +105,14 @@ public class FavoriteControllerTest {
 
     @Test
     public void show_withProperId() throws Exception {
-        when(favoriteService.findById(1L)).thenReturn(favorite1);
+        when(favoriteService.findById("1")).thenReturn(favorite1);
 
         mockMvc.perform(get("/api/favorities/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.phraseId", is(1)));
 
-        verify(favoriteService, times(1)).findById(1L);
+        verify(favoriteService, times(1)).findById("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
@@ -123,22 +124,22 @@ public class FavoriteControllerTest {
 
     @Test
     public void show_whenRecordDoesnotExist() throws Exception {
-        when(favoriteService.findById(anyLong())).thenReturn(null);
+        when(favoriteService.findById("1")).thenReturn(null);
         mockMvc.perform(get("/api/favorities/{id}", anyLong()))
                 .andExpect(status().isNotFound());
 
-        verify(favoriteService, times(1)).findById(anyLong());
+        verify(favoriteService, times(1)).findById("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
     @Test
     public void show_whenDBFailsThenThrowsException() throws Exception {
-        when(favoriteService.findById(1L)).thenThrow(new DataAccessException("..."){});
+        when(favoriteService.findById("1")).thenThrow(new DataAccessException("..."){});
 
         mockMvc.perform(get("/api/favorities/{id}", 1))
                 .andExpect(status().isInternalServerError());
 
-        verify(favoriteService, times(1)).findById(1L);
+        verify(favoriteService, times(1)).findById("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
@@ -200,7 +201,7 @@ public class FavoriteControllerTest {
 
     @Test
     public void update_withProperFavoriteAndId() throws Exception {
-        when(favoriteService.findById(anyLong())).thenReturn(favorite1);
+        when(favoriteService.findById("1")).thenReturn(favorite1);
         when(favoriteService.save(any(Favorite.class))).thenReturn(favorite1);
         
         mockMvc.perform(put("/api/favorities/{id}", 1)
@@ -213,7 +214,7 @@ public class FavoriteControllerTest {
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.UPDATED.getMessage())));
 
-        verify(favoriteService, times(1)).findById(anyLong());
+        verify(favoriteService, times(1)).findById("1");
         verify(favoriteService, times(1)).save(any(Favorite.class));
         verifyNoMoreInteractions(favoriteService);
     }
@@ -244,7 +245,7 @@ public class FavoriteControllerTest {
 
     @Test
     public void update_whenFavoriteIsNotFound() throws Exception {
-        when(favoriteService.findById(anyLong())).thenReturn(null);
+        when(favoriteService.findById("1")).thenReturn(null);
 
         mockMvc.perform(put("/api/favorities/{id}", anyLong())
                 .content(objectMapper.writeValueAsString(favorite1))
@@ -252,14 +253,14 @@ public class FavoriteControllerTest {
                 //.andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(favoriteService, times(1)).findById(anyLong());
+        verify(favoriteService, times(1)).findById("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
     @Test
     public void update_whenDBFailsThenThrowsException() throws Exception {
         when(favoriteService.save(any(Favorite.class))).thenThrow(new DataAccessException("..."){});
-        when(favoriteService.findById(anyLong())).thenReturn(favorite1);
+        when(favoriteService.findById("1")).thenReturn(favorite1);
 
         mockMvc.perform(put("/api/favorities/{id}", 1)
                 .content(objectMapper.writeValueAsString(favorite1))
@@ -268,7 +269,7 @@ public class FavoriteControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(favoriteService, times(1)).save(any(Favorite.class));
-        verify(favoriteService, times(1)).findById(anyLong());
+        verify(favoriteService, times(1)).findById("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
@@ -278,14 +279,14 @@ public class FavoriteControllerTest {
 
     @Test
     public void delete_withProperId() throws Exception {
-        doNothing().when(favoriteService).delete(anyLong());
+        doNothing().when(favoriteService).delete("1");
         
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/favorities/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.DELETED.getMessage())));
 
-        verify(favoriteService, times(1)).delete(anyLong());
+        verify(favoriteService, times(1)).delete("1");
         verifyNoMoreInteractions(favoriteService);
     }
 
@@ -298,14 +299,14 @@ public class FavoriteControllerTest {
 
     @Test
     public void delete_whenUserIsNotFoundThenThrowException() throws Exception {
-        doThrow(new DataAccessException("..."){}).when(favoriteService).delete(anyLong());
+        doThrow(new DataAccessException("..."){}).when(favoriteService).delete("1");
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/favorities/{id}", anyLong())
                 .contentType(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isInternalServerError());
 
-        verify(favoriteService, times(1)).delete(anyLong());
+        verify(favoriteService, times(1)).delete("1");
         verifyNoMoreInteractions(favoriteService);
     }
 

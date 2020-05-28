@@ -1,6 +1,7 @@
-package com.microservice.delivery.controllers;
+package com.microservice.delivery.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservice.delivery.controllers.HistoryController;
 import com.microservices.commons.enums.CrudMessagesEnum;
 import com.microservices.commons.models.entity.delivery.History;
 import com.microservice.delivery.models.services.IHistoryService;
@@ -105,14 +106,14 @@ public class HistoryControllerTest {
 
     @Test
     public void show_withProperId() throws Exception {
-        when(historyService.findById(1L)).thenReturn(history1);
+        when(historyService.findById("1")).thenReturn(history1);
 
         mockMvc.perform(get("/api/histories/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.phraseId", is(1)));
 
-        verify(historyService, times(1)).findById(1L);
+        verify(historyService, times(1)).findById("1");
         verifyNoMoreInteractions(historyService);
     }
 
@@ -124,22 +125,22 @@ public class HistoryControllerTest {
 
     @Test
     public void show_whenRecordDoesnotExist() throws Exception {
-        when(historyService.findById(anyLong())).thenReturn(null);
+        when(historyService.findById("1")).thenReturn(null);
         mockMvc.perform(get("/api/histories/{id}", anyLong()))
                 .andExpect(status().isNotFound());
 
-        verify(historyService, times(1)).findById(anyLong());
+        verify(historyService, times(1)).findById("1");
         verifyNoMoreInteractions(historyService);
     }
 
     @Test
     public void show_whenDBFailsThenThrowsException() throws Exception {
-        when(historyService.findById(1L)).thenThrow(new DataAccessException("..."){});
+        when(historyService.findById("1")).thenThrow(new DataAccessException("..."){});
 
         mockMvc.perform(get("/api/histories/{id}", 1))
                 .andExpect(status().isInternalServerError());
 
-        verify(historyService, times(1)).findById(1L);
+        verify(historyService, times(1)).findById("1");
         verifyNoMoreInteractions(historyService);
     }
 
@@ -201,7 +202,7 @@ public class HistoryControllerTest {
 
     @Test
     public void update_withProperHistoryAndId() throws Exception {
-        when(historyService.findById(anyLong())).thenReturn(history1);
+        when(historyService.findById("1")).thenReturn(history1);
         when(historyService.save(any(History.class))).thenReturn(history1);
         
         mockMvc.perform(put("/api/histories/{id}", 1)
@@ -214,7 +215,7 @@ public class HistoryControllerTest {
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.UPDATED.getMessage())));
 
-        verify(historyService, times(1)).findById(anyLong());
+        verify(historyService, times(1)).findById("1");
         verify(historyService, times(1)).save(any(History.class));
         verifyNoMoreInteractions(historyService);
     }
@@ -245,7 +246,7 @@ public class HistoryControllerTest {
 
     @Test
     public void update_whenHistoryIsNotFound() throws Exception {
-        when(historyService.findById(anyLong())).thenReturn(null);
+        when(historyService.findById("1")).thenReturn(null);
 
         mockMvc.perform(put("/api/histories/{id}", anyLong())
                 .content(objectMapper.writeValueAsString(history1))
@@ -253,14 +254,14 @@ public class HistoryControllerTest {
                 //.andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(historyService, times(1)).findById(anyLong());
+        verify(historyService, times(1)).findById("1");
         verifyNoMoreInteractions(historyService);
     }
 
     @Test
     public void update_whenDBFailsThenThrowsException() throws Exception {
         when(historyService.save(any(History.class))).thenThrow(new DataAccessException("..."){});
-        when(historyService.findById(anyLong())).thenReturn(history1);
+        when(historyService.findById("1")).thenReturn(history1);
 
         mockMvc.perform(put("/api/histories/{id}", 1)
                 .content(objectMapper.writeValueAsString(history1))
@@ -269,7 +270,7 @@ public class HistoryControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(historyService, times(1)).save(any(History.class));
-        verify(historyService, times(1)).findById(anyLong());
+        verify(historyService, times(1)).findById("1");
         verifyNoMoreInteractions(historyService);
     }
 
@@ -279,14 +280,14 @@ public class HistoryControllerTest {
 
     @Test
     public void delete_withProperId() throws Exception {
-        doNothing().when(historyService).delete(anyLong());
+        doNothing().when(historyService).delete("1");
         
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/histories/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.DELETED.getMessage())));
 
-        verify(historyService, times(1)).delete(anyLong());
+        verify(historyService, times(1)).delete("1");
         verifyNoMoreInteractions(historyService);
     }
 
@@ -299,14 +300,14 @@ public class HistoryControllerTest {
 
     @Test
     public void delete_whenUserIsNotFoundThenThrowException() throws Exception {
-        doThrow(new DataAccessException("..."){}).when(historyService).delete(anyLong());
+        doThrow(new DataAccessException("..."){}).when(historyService).delete("1");
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/histories/{id}", anyLong())
                 .contentType(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isInternalServerError());
 
-        verify(historyService, times(1)).delete(anyLong());
+        verify(historyService, times(1)).delete("1");
         verifyNoMoreInteractions(historyService);
     }
 

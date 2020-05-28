@@ -1,6 +1,7 @@
-package com.microservice.delivery.controllers;
+package com.microservice.delivery.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservice.delivery.controllers.LikesController;
 import com.microservices.commons.enums.CrudMessagesEnum;
 import com.microservices.commons.models.entity.delivery.Like;
 import com.microservice.delivery.models.services.ILikesService;
@@ -105,14 +106,14 @@ public class LikesControllerTest {
 
     @Test
     public void show_withProperId() throws Exception {
-        when(likesService.findById(1L)).thenReturn(like1);
+        when(likesService.findById("1")).thenReturn(like1);
 
         mockMvc.perform(get("/api/likes/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.phraseId", is(1)));
 
-        verify(likesService, times(1)).findById(1L);
+        verify(likesService, times(1)).findById("1");
         verifyNoMoreInteractions(likesService);
     }
 
@@ -124,22 +125,22 @@ public class LikesControllerTest {
 
     @Test
     public void show_whenRecordDoesnotExist() throws Exception {
-        when(likesService.findById(anyLong())).thenReturn(null);
+        when(likesService.findById("1")).thenReturn(null);
         mockMvc.perform(get("/api/likes/{id}", anyLong()))
                 .andExpect(status().isNotFound());
 
-        verify(likesService, times(1)).findById(anyLong());
+        verify(likesService, times(1)).findById("1");
         verifyNoMoreInteractions(likesService);
     }
 
     @Test
     public void show_whenDBFailsThenThrowsException() throws Exception {
-        when(likesService.findById(1L)).thenThrow(new DataAccessException("..."){});
+        when(likesService.findById("1")).thenThrow(new DataAccessException("..."){});
 
         mockMvc.perform(get("/api/likes/{id}", 1))
                 .andExpect(status().isInternalServerError());
 
-        verify(likesService, times(1)).findById(1L);
+        verify(likesService, times(1)).findById("1");
         verifyNoMoreInteractions(likesService);
     }
 
@@ -201,7 +202,7 @@ public class LikesControllerTest {
 
     @Test
     public void update_withProperLikeAndId() throws Exception {
-        when(likesService.findById(anyLong())).thenReturn(like1);
+        when(likesService.findById("1")).thenReturn(like1);
         when(likesService.save(any(Like.class))).thenReturn(like1);
 
         mockMvc.perform(put("/api/likes/{id}", 1)
@@ -214,7 +215,7 @@ public class LikesControllerTest {
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.UPDATED.getMessage())));
 
-        verify(likesService, times(1)).findById(anyLong());
+        verify(likesService, times(1)).findById("1");
         verify(likesService, times(1)).save(any(Like.class));
         verifyNoMoreInteractions(likesService);
     }
@@ -245,7 +246,7 @@ public class LikesControllerTest {
 
     @Test
     public void update_whenLikeIsNotFound() throws Exception {
-        when(likesService.findById(anyLong())).thenReturn(null);
+        when(likesService.findById("1")).thenReturn(null);
 
         mockMvc.perform(put("/api/likes/{id}", anyLong())
                 .content(objectMapper.writeValueAsString(like1))
@@ -253,14 +254,14 @@ public class LikesControllerTest {
                 //.andDo(print())
                 .andExpect(status().isNotFound());
 
-        verify(likesService, times(1)).findById(anyLong());
+        verify(likesService, times(1)).findById("1");
         verifyNoMoreInteractions(likesService);
     }
 
     @Test
     public void update_whenDBFailsThenThrowsException() throws Exception {
         when(likesService.save(any(Like.class))).thenThrow(new DataAccessException("..."){});
-        when(likesService.findById(anyLong())).thenReturn(like1);
+        when(likesService.findById("1")).thenReturn(like1);
 
         mockMvc.perform(put("/api/likes/{id}", 1)
                 .content(objectMapper.writeValueAsString(like1))
@@ -269,7 +270,7 @@ public class LikesControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(likesService, times(1)).save(any(Like.class));
-        verify(likesService, times(1)).findById(anyLong());
+        verify(likesService, times(1)).findById("1");
         verifyNoMoreInteractions(likesService);
     }
 
@@ -279,14 +280,14 @@ public class LikesControllerTest {
 
     @Test
     public void delete_withProperId() throws Exception {
-        doNothing().when(likesService).delete(anyLong());
+        doNothing().when(likesService).delete("1");
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/likes/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.msg", is(CrudMessagesEnum.DELETED.getMessage())));
 
-        verify(likesService, times(1)).delete(anyLong());
+        verify(likesService, times(1)).delete("1");
         verifyNoMoreInteractions(likesService);
     }
 
@@ -299,14 +300,14 @@ public class LikesControllerTest {
 
     @Test
     public void delete_whenUserIsNotFoundThenThrowException() throws Exception {
-        doThrow(new DataAccessException("..."){}).when(likesService).delete(anyLong());
+        doThrow(new DataAccessException("..."){}).when(likesService).delete("1");
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/likes/{id}", anyLong())
                 .contentType(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isInternalServerError());
 
-        verify(likesService, times(1)).delete(anyLong());
+        verify(likesService, times(1)).delete("1");
         verifyNoMoreInteractions(likesService);
     }
 

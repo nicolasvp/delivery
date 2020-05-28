@@ -43,7 +43,7 @@ public class LikesController {
 	}
 	
 	@GetMapping(path="/likes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> show(@PathVariable Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> show(@PathVariable String id) throws NullRecordException, DatabaseAccessException {
 		
 		Like like = null;
 
@@ -92,7 +92,7 @@ public class LikesController {
 	}
 	
 	@PutMapping(path="/likes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@Valid @RequestBody Like like, BindingResult result, @PathVariable("id") Long id) throws NullRecordException, DatabaseAccessException {
+	public ResponseEntity<?> update(@Valid @RequestBody Like like, BindingResult result, @PathVariable("id") String id) throws NullRecordException, DatabaseAccessException {
 		
 		Like likeFromDB = likesService.findById(id);
 		Like likeUpdated = null;
@@ -113,7 +113,7 @@ public class LikesController {
 
 		try {
 			log.info(Messages.updatingObjectMessage("Like", id.toString()));
-			likeFromDB.setUser(like.getUser());
+			likeFromDB.setUserId(like.getUserId());
 			likeFromDB.setPhraseId(like.getPhraseId());
 			likeUpdated = likesService.save(likeFromDB);
 		} catch (DataAccessException e) {
@@ -128,7 +128,7 @@ public class LikesController {
 	}
 	
 	@DeleteMapping(path="/likes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws DatabaseAccessException {
+	public ResponseEntity<?> delete(@PathVariable("id") String id) throws DatabaseAccessException {
 		
 		Map<String, Object> response = new HashMap<>();
 
