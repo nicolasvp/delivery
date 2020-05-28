@@ -18,7 +18,10 @@ import org.springframework.context.annotation.ComponentScan;
 public class DeliveryApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DeliveryApplication.class, args);
+        SpringApplication application = new SpringApplication(DeliveryApplication.class);
+        application.setAllowBeanDefinitionOverriding(true);
+        application.run(args);
+
 	}
 
     @Bean

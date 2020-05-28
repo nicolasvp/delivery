@@ -3,7 +3,6 @@ package com.microservice.delivery.models.dao;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
 import com.microservices.commons.models.entity.delivery.History;
 
 public interface IHistoryDao extends MongoRepository<History, String> {
