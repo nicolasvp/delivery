@@ -23,9 +23,10 @@ public class DeliveryApplication {
         application.run(args);
 
 	}
-
+/*
     @Bean
     public FeignErrorDecoder errorDecoder() {
         return new FeignErrorDecoder();
     }
+    */
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.microservices.commons.models.entity.users.User;
 
-@FeignClient(name="USERS-SERVICE") // Service name registered on Eureka Server
+@FeignClient(name="USERS-SERVICE", fallback = UserServiceFallback.class) // Service name registered on Eureka Server
 public interface IUserRemoteCallService {
 
 	@GetMapping("/users/")

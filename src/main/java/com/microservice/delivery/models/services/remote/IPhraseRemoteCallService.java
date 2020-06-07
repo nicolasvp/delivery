@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.microservices.commons.models.entity.phrases.Phrase;
 
-@FeignClient(name="PHRASES-SERVICE")
+@FeignClient(name="PHRASES-SERVICE", fallback = PhrasesServiceFallBack.class)
 public interface IPhraseRemoteCallService {
 
 	@GetMapping("/phrases")

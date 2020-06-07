@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 
-
+/*
 @Component
 @Primary
 public class FeignErrorDecoder implements ErrorDecoder {
@@ -32,3 +32,5 @@ public class FeignErrorDecoder implements ErrorDecoder {
         } 
 	}
 }
+
+*/
